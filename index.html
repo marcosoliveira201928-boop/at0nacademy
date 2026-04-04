@@ -1,113 +1,218 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mapas - Táticas</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
-    }
+<meta charset="UTF-8">
+<title>AT0N Gaming - Login</title>
 
-    header {
-      background: #020617;
-      padding: 20px;
-      text-align: center;
-      border-bottom: 2px solid #1e293b;
-    }
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: Arial, sans-serif;
 
-    header h1 {
-      margin: 0;
-      color: #38bdf8;
-    }
+  /* fundo da imagem */
+  background: url('https://media.discordapp.net/attachments/1482819377106522144/1490112448538214581/Gemini_Generated_Image_uodijjuodijjuodi.png?ex=69d2dedc&is=69d18d5c&hm=fdc284008bac09bb89c119899a164d52323111420590709d7d4984fb5b51f56d&=&format=webp&quality=lossless') no-repeat center center;
+  background-size: cover;
 
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 20px;
-    }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-    .maps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
+  /* LOGO */
+  .logo {
+    margin-bottom: 20px;
+    text-align: center;
+  }
 
-    .map-card {
-      background: transparent;
-      border: none;
-      border-radius: 0;
-      overflow: hidden;
-      text-align: center;
-      transition: 0.3s;
-      cursor: pointer;
-    }
+  .logo img {
+    width: 180px;
+  }
 
-    .map-card:hover {
-      transform: scale(1.05);
+  @keyframes glow {
+    from {
+      filter: drop-shadow(0 0 5px #ffffff);
     }
+    to {
+      filter: drop-shadow(0 0 20px #ffffff);
+    }
+  }
 
-    .map-card img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-    }
+  .box {
+    background: rgba(20, 20, 20, 0.95);
+    padding: 40px;
+    border-radius: 16px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    border: 1px solid rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
+  }
 
-    .map-card h2 {
-      display: none;
-    }
+  .shake {
+    animation: shake 0.3s;
+  }
 
-    .map-card a {
-      text-decoration: none;
-      color: inherit;
-      display: block;
-      padding-bottom: 10px;
-    }
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(6px); }
+    75% { transform: translateX(-6px); }
+    100% { transform: translateX(0); }
+  }
 
-    footer {
-      text-align: center;
-      padding: 15px;
-      border-top: 1px solid #1e293b;
-      margin-top: 30px;
-    }
-  </style>
+  h2 {
+    color: #fff;
+    margin-bottom: 20px;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: #1f1f1f;
+    color: #fff;
+    transition: 0.2s;
+  }
+
+  input:focus {
+    box-shadow: 0 0 8px #ffffff;
+  }
+
+  input.error {
+    border: 2px solid red;
+  }
+
+  input.success {
+    border: 2px solid #ffffff;
+  }
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #ffffff, #6b6b6b);
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  
+  /* Transições suaves */
+  transition: all 0.4s ease; 
+  background-size: 200% 200%; /* Para animar gradiente */
+}
+
+/* Hover com efeito profissional */
+button:hover {
+  transform: scale(1.05); /* leve aumento */
+  
+  /* Gradiente animado para cores mais chamativas */
+  background: linear-gradient(90deg, #5a5a5a, #050505, #8b8b8b);
+  background-size: 300% 300%; /* aumenta área do gradiente */
+  
+  /* animação suave do gradiente */
+  animation: gradientShift 3s ease infinite;
+  color: #fff; /* opcional: muda a cor do texto */
+}
+
+/* Efeito de gradiente contínuo */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Estado de loading */
+button.loading {
+  background: #555;
+  cursor: not-allowed;
+  transform: none; /* remove scale durante loading */
+  animation: none; /* remove animação */
+}
+
+  .erro {
+    color: #ff4d4d;
+    font-size: 13px;
+    display: none;
+    margin-top: 10px;
+  }
+
+</style>
 </head>
 <body>
 
-<header>
-  <h1>Escolha o Mapa</h1>
-</header>
-
-<div class="container">
-
-  <div class="maps">
-
-    <!-- DUST2 -->
-    <div class="map-card">
-      <a href="ancient.html">
-        <img src="./imgs/ancient.jpg" alt="Dust2">
-        <h2>Dust2</h2>
-      </a>
-    </div>
-
-    <!-- MIRAGE -->
-    <div class="map-card">
-      <a href="./maps/mirage.html">
-        <img src="./imgs/mirage.jpg" alt="Mirage">
-        <h2>Mirage</h2>
-      </a>
-    </div>
-
-  </div>
-
+<!-- LOGO AQUI -->
+<div class="logo">
+  <img src="imgs/aton.png" alt="AT0N Gaming">
 </div>
 
-<footer>
-  Selecione um mapa para ver as táticas
-</footer>
+<div class="box" id="box">
+  <h2>Login</h2>
+
+  <form id="loginForm">
+    <input type="text" id="user" placeholder="Usuário" required>
+    <input type="password" id="pass" placeholder="Senha" required>
+
+    <button type="submit" id="btn">Entrar</button>
+
+    <div class="erro" id="erro">Usuário ou senha incorretos</div>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById("loginForm");
+  const user = document.getElementById("user");
+  const pass = document.getElementById("pass");
+  const erro = document.getElementById("erro");
+  const box = document.getElementById("box");
+  const btn = document.getElementById("btn");
+
+  const users = [
+    { username: "atongaming", password: "atongaming2026" },
+  ];
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    erro.style.display = "none";
+
+    user.classList.remove("error", "success");
+    pass.classList.remove("error", "success");
+
+    const validUser = users.find(u => 
+      u.username === user.value && u.password === pass.value
+    );
+
+    if (validUser) {
+
+      user.classList.add("success");
+      pass.classList.add("success");
+
+      btn.classList.add("loading");
+      btn.innerText = "Entrando...";
+
+      setTimeout(() => {
+        window.location.href = "main.html";
+      }, 1200);
+
+    } else {
+
+      erro.style.display = "block";
+
+      user.classList.add("error");
+      pass.classList.add("error");
+
+      box.classList.add("shake");
+      setTimeout(() => box.classList.remove("shake"), 300);
+    }
+  });
+</script>
 
 </body>
 </html>
