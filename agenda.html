@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATON Gaming — Calendário CS2</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #090909;
+    --bg-card: #111111;
+    --bg-hover: #161616;
+    --border: #1e1e1e;
+    --border-accent: #2a2a2a;
+    --text-primary: #f0f0f0;
+    --text-secondary: #666;
+    --text-muted: #333;
+    --accent: #e63946;
+    --accent-dim: rgba(230, 57, 70, 0.12);
+    --accent-glow: rgba(230, 57, 70, 0.06);
+    --green: #2dc653;
+    --green-dim: rgba(45, 198, 83, 0.1);
+    --amber: #f4a21e;
+    --amber-dim: rgba(244, 162, 30, 0.1);
+    --blue: #3a86ff;
+    --blue-dim: rgba(58, 134, 255, 0.1);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding: 0;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* HEADER (Estrutura da Ancient) */
+  header {
+    background: var(--bg); padding: 28px 40px 24px; border-bottom: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+    flex-shrink: 0;
+  }
+
+  header img { height: 64px; object-fit: contain; }
+  .header-title-row { display: flex; align-items: center; gap: 16px; }
+  .header-divider { width: 1px; height: 28px; background: var(--border-accent); }
+
+  header h1 {
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 28px;
+    letter-spacing: 6px; color: var(--text-primary); margin: 0;
+  }
+
+  .header-sub { font-size: 10px; font-family: 'Share Tech Mono', monospace; color: var(--text-muted); letter-spacing: 3px; text-transform: uppercase; }
+
+  .map-badge {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+    border: 1px solid var(--accent); background: var(--accent-dim); color: var(--accent);
+    font-size: 9px; font-family: 'Share Tech Mono', monospace; letter-spacing: 2px; text-transform: uppercase; border-radius: 2px;
+  }
+  .map-badge::before { content: ''; display: inline-block; width: 5px; height: 5px; background: var(--accent); border-radius: 50%; }
+
+  /* NAV (Estrutura da Ancient) */
+  nav.main-nav {
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    gap: 2px; padding: 0 24px; position: sticky; top: 0; z-index: 50;
+    flex-shrink: 0;
+  }
+
+  .nav-link {
+    display: inline-flex; align-items: center; gap: 7px; padding: 13px 18px;
+    font-size: 10px; font-family: 'Share Tech Mono', monospace; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--text-muted); text-decoration: none;
+    border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; white-space: nowrap;
+  }
+  .nav-link:hover { color: var(--text-secondary); }
+  .nav-link.active { color: var(--text-primary); border-bottom-color: var(--accent); }
+  .nav-dot { width: 5px; height: 5px; border-radius: 1px; background: currentColor; opacity: 0.5; flex-shrink: 0; }
+  .nav-link.active .nav-dot { opacity: 1; background: var(--accent); }
+  .nav-sep { width: 1px; height: 16px; background: var(--border); margin: 0 4px; }
+
+  /* CALENDAR TABS */
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nav-tab {
+    padding: 7px 16px;
+    font-size: 12px;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    background: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 2px;
+  }
+
+  .nav-tab:hover { color: var(--text-primary); border-color: var(--border-accent); }
+  .nav-tab.active { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .status-label {
+    font-size: 11px;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--green);
+    letter-spacing: 1px;
+  }
+
+  /* MAIN */
+  .main {
+    display: grid;
+    grid-template-columns: 260px 1fr 280px;
+    gap: 0;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 24px 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .sidebar::-webkit-scrollbar { width: 0; }
+
+  .section-label {
+    font-size: 9px;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  /* MINI CALENDAR */
+  .mini-cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .mini-cal-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 2px;
+  }
+
+  .mini-nav {
+    display: flex;
+    gap: 2px;
+  }
+
+  .mini-nav button {
+    width: 22px;
+    height: 22px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 11px;
+    transition: all 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+  }
+
+  .mini-nav button:hover { border-color: var(--accent); color: var(--accent); }
+
+  .mini-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+
+  .mini-day-label {
+    font-size: 9px;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 4px 0;
+    letter-spacing: 0.5px;
+  }
+
+  .mini-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.1s;
+    position: relative;
+  }
+
+  .mini-day:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .mini-day.today { color: var(--accent); font-weight: 600; }
+  .mini-day.selected { background: var(--accent); color: white; }
+  .mini-day.has-event::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  .mini-day.selected::after { background: white; }
+  .mini-day.other-month { opacity: 0.25; }
+
+  /* FILTER */
+  .filter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .filter-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .filter-item:hover { background: var(--bg-hover); }
+
+  .filter-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+
+  .filter-name {
+    font-size: 12px;
+    color: var(--text-secondary);
+    flex: 1;
+    transition: color 0.1s;
+  }
+
+  .filter-item:hover .filter-name { color: var(--text-primary); }
+
+  .filter-count {
+    font-size: 10px;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text-muted);
+  }
+
+  .filter-item.active .filter-name { color: var(--text-primary); }
+
+  /* ROSTER */
+  .roster-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .player-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.1s;
+    border: 1px solid transparent;
+  }
+
+  .player-row:hover { background: var(--bg-hover); border-color: var(--border); }
+
+  .player-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 2px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .player-info { flex: 1; min-width: 0; }
+  .player-nick { font-size: 12px; font-weight: 500; color: var(--text-primary); letter-spacing: 0.5px; }
+  .player-role { font-size: 10px; color: var(--text-muted); }
+
+  .player-status {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .player-status.online { background: var(--green); }
+  .player-status.away { background: var(--amber); }
+
+  /* CALENDAR MAIN */
+  .cal-area {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .cal-header {
+    padding: 20px 28px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cal-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: 3px;
+    color: var(--text-primary);
+  }
+
+  .cal-controls {
+    display: flex;
+    gap: 6px;
+  }
+
+  .cal-btn {
+    padding: 6px 14px;
+    font-size: 11px;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid var(--border-accent);
+    background: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 2px;
+  }
+
+  .cal-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+  .cal-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+  .add-event-btn {
+    padding: 6px 14px;
+    font-size: 11px;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 2px;
+    margin-left: 8px;
+  }
+
+  .add-event-btn:hover { background: #c1121f; border-color: #c1121f; }
+
+  /* WEEKDAYS ROW */
+  .cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+  }
+
+  .cal-weekday {
+    padding: 10px 8px;
+    font-size: 10px;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  /* CALENDAR GRID */
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px 20px;
+  }
+
+  .cal-grid::-webkit-scrollbar { width: 0; }
+
+  .cal-cell {
+    min-height: 110px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 8px;
+    cursor: pointer;
+    transition: background 0.1s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cal-cell:hover { background: var(--bg-hover); }
+  .cal-cell.today { background: var(--accent-glow); }
+  .cal-cell.today .cell-number { color: var(--accent); }
+
+  .cal-cell.selected { background: rgba(230, 57, 70, 0.05); }
+  .cal-cell.other-month { opacity: 0.35; }
+
+  .cal-cell:nth-child(7n) { border-right: none; }
+
+  .cell-number {
+    font-size: 13px;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .cal-cell.today .cell-number::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+
+  .event-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 7px;
+    border-radius: 2px;
+    font-size: 10px;
+    margin-bottom: 3px;
+    cursor: pointer;
+    transition: opacity 0.1s;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .event-pill:hover { opacity: 0.8; }
+
+  .event-pill.treino { background: var(--blue-dim); color: var(--blue); border-left: 2px solid var(--blue); }
+  .event-pill.partida { background: var(--accent-dim); color: var(--accent); border-left: 2px solid var(--accent); }
+  .event-pill.torneio { background: var(--amber-dim); color: var(--amber); border-left: 2px solid var(--amber); }
+  .event-pill.reuniao { background: var(--green-dim); color: var(--green); border-left: 2px solid var(--green); }
+
+  .event-time {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .event-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 10px;
+    font-weight: 500;
+  }
+
+  .more-events {
+    font-size: 9px;
+    color: var(--text-muted);
+    font-family: 'Share Tech Mono', monospace;
+    padding-left: 2px;
+  }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    border-left: 1px solid var(--border);
+    padding: 24px 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .right-panel::-webkit-scrollbar { width: 0; }
+
+  .day-detail-header {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+  }
+
+  .day-detail-sub {
+    font-size: 11px;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text-muted);
+    margin-top: 4px;
+    letter-spacing: 1.5px;
+  }
+
+  .event-detail-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 14px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .event-detail-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+  }
+
+  .event-detail-card.treino::before { background: var(--blue); }
+  .event-detail-card.partida::before { background: var(--accent); }
+  .event-detail-card.torneio::before { background: var(--amber); }
+  .event-detail-card.reuniao::before { background: var(--green); }
+
+  .event-detail-card:hover { border-color: var(--border-accent); background: var(--bg-hover); }
+
+  .event-card-type {
+    font-size: 9px;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .event-card-type.treino { color: var(--blue); }
+  .event-card-type.partida { color: var(--accent); }
+  .event-card-type.torneio { color: var(--amber); }
+  .event-card-type.reuniao { color: var(--green); }
+
+  .event-card-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .event-card-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .meta-icon { font-size: 10px; }
+
+  .event-card-players {
+    display: flex;
+    gap: 4px;
+    margin-top: 10px;
+  }
+
+  .player-chip {
+    padding: 2px 7px;
+    font-size: 9px;
+    font-family: 'Share Tech Mono', monospace;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    border-radius: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  /* STATS */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 12px;
+    border-radius: 3px;
+    text-align: center;
+  }
+
+  .stat-value {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--text-primary);
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+
+  .stat-label {
+    font-size: 9px;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: #0e0e0e;
+    border: 1px solid var(--border-accent);
+    width: 420px;
+    max-width: 90vw;
+    padding: 28px;
+    border-radius: 4px;
+    position: relative;
+  }
+
+  .modal-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-close {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    transition: all 0.1s;
+  }
+
+  .modal-close:hover { border-color: var(--accent); color: var(--accent); }
+
+  .form-group { margin-bottom: 14px; }
+
+  .form-label {
+    display: block;
+    font-size: 9px;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 9px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border-accent);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    border-radius: 2px;
+    transition: border-color 0.15s;
+    outline: none;
+  }
+
+  .form-input:focus { border-color: var(--accent); }
+
+  .form-select {
+    width: 100%;
+    padding: 9px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border-accent);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    transition: border-color 0.15s;
+  }
+
+  .form-select:focus { border-color: var(--accent); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 11px;
+    background: var(--accent);
+    border: none;
+    color: white;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.15s;
+    margin-top: 8px;
+    text-transform: uppercase;
+  }
+
+  .submit-btn:hover { background: #c1121f; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    text-align: center;
+  }
+
+  .empty-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+    opacity: 0.2;
+  }
+
+  .empty-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1100px) {
+    .main { grid-template-columns: 220px 1fr; }
+    .right-panel { display: none; }
+  }
+
+  @media (max-width: 700px) {
+    .main { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 20px 16px; } 
+    header h1 { font-size: 20px; letter-spacing: 4px; }
+    nav.main-nav { justify-content: flex-start; overflow-x: auto; } 
+    nav.main-nav::-webkit-scrollbar { display: none; }
+    .cal-header { flex-direction: column; gap: 16px; align-items: flex-start; }
+    .nav-tabs { order: 3; width: 100%; justify-content: space-between; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="imgs/aton.png" alt="Aton Gaming">
+  <div class="header-title-row">
+    <div class="header-divider"></div>
+    <div><h1>AGENDA</h1><div class="header-sub">CS2 // CALENDÁRIO</div></div>
+    <div class="header-divider"></div>
+  </div>
+  <span class="map-badge">Página de Agenda</span>
+</header>
+
+<nav class="main-nav">
+  <a href="inicio.html"    class="nav-link"><span class="nav-dot"></span>Início</a>
+  <div class="nav-sep"></div>
+  <a href="agenda.html"    class="nav-link active"><span class="nav-dot"></span>Agenda</a>
+  <div class="nav-sep"></div>
+  <a href="main.html"   class="nav-link"><span class="nav-dot"></span>Mapas</a>
+  <div class="nav-sep"></div>
+  <a href="ancient.html" class="nav-link"><span class="nav-dot"></span>Ancient</a>
+  <a href="mirage.html"  class="nav-link"><span class="nav-dot"></span>Mirage</a>
+</nav>
+
+<div class="main">
+
+  <aside class="sidebar">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom: 8px;">
+      <div class="status-dot"></div>
+      <span class="status-label">CS2 // ATIVO</span>
+    </div>
+
+    <div>
+      <div class="section-label">Navegação</div>
+      <div class="mini-cal-header">
+        <span class="mini-cal-title" id="miniCalTitle"></span>
+        <div class="mini-nav">
+          <button onclick="miniNavMonth(-1)">‹</button>
+          <button onclick="miniNavMonth(1)">›</button>
+        </div>
+      </div>
+      <div class="mini-grid" id="miniGrid"></div>
+    </div>
+
+    <div>
+      <div class="section-label">Filtros</div>
+      <div class="filter-list">
+        <div class="filter-item active" onclick="toggleFilter(this, 'all')">
+          <div class="filter-dot" style="background:#f0f0f0"></div>
+          <span class="filter-name">Todos</span>
+          <span class="filter-count" id="count-all">—</span>
+        </div>
+        <div class="filter-item" onclick="toggleFilter(this, 'treino')">
+          <div class="filter-dot" style="background:#3a86ff"></div>
+          <span class="filter-name">Treinos</span>
+          <span class="filter-count" id="count-treino">—</span>
+        </div>
+        <div class="filter-item" onclick="toggleFilter(this, 'partida')">
+          <div class="filter-dot" style="background:#e63946"></div>
+          <span class="filter-name">Partidas</span>
+          <span class="filter-count" id="count-partida">—</span>
+        </div>
+        <div class="filter-item" onclick="toggleFilter(this, 'torneio')">
+          <div class="filter-dot" style="background:#f4a21e"></div>
+          <span class="filter-name">Torneios</span>
+          <span class="filter-count" id="count-torneio">—</span>
+        </div>
+        <div class="filter-item" onclick="toggleFilter(this, 'reuniao')">
+          <div class="filter-dot" style="background:#2dc653"></div>
+          <span class="filter-name">Reuniões</span>
+          <span class="filter-count" id="count-reuniao">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">Roster CS2</div>
+      <div class="roster-list" id="rosterList"></div>
+    </div>
+  </aside>
+
+  <div class="cal-area">
+    <div class="cal-header">
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="display:flex;gap:4px">
+          <button class="cal-btn" onclick="navMonth(-1)" style="padding:6px 10px">‹</button>
+          <button class="cal-btn" onclick="navMonth(1)" style="padding:6px 10px">›</button>
+        </div>
+        <div class="cal-title" id="calTitle"></div>
+      </div>
+      
+      <nav class="nav-tabs">
+        <button class="nav-tab active" onclick="setView('mes')">Mês</button>
+        <button class="nav-tab" onclick="setView('semana')">Semana</button>
+        <button class="nav-tab" onclick="setView('lista')">Lista</button>
+      </nav>
+
+      <div class="cal-controls">
+        <button class="cal-btn" onclick="goToday()">Hoje</button>
+        <button class="add-event-btn" onclick="openModal()">+ Evento</button>
+      </div>
+    </div>
+
+    <div class="cal-weekdays">
+      <div class="cal-weekday">Dom</div>
+      <div class="cal-weekday">Seg</div>
+      <div class="cal-weekday">Ter</div>
+      <div class="cal-weekday">Qua</div>
+      <div class="cal-weekday">Qui</div>
+      <div class="cal-weekday">Sex</div>
+      <div class="cal-weekday">Sáb</div>
+    </div>
+
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <aside class="right-panel">
+    <div>
+      <div class="day-detail-header" id="selectedDayTitle">—</div>
+      <div class="day-detail-sub" id="selectedDayFull">Selecione um dia</div>
+    </div>
+
+    <div>
+      <div class="section-label">Eventos do dia</div>
+      <div id="dayEventsList">
+        <div class="empty-state">
+          <div class="empty-icon">◉</div>
+          <div class="empty-text">Nenhum evento</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">Estatísticas do mês</div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-treinos">0</div>
+          <div class="stat-label">Treinos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-partidas">0</div>
+          <div class="stat-label">Partidas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-torneios">0</div>
+          <div class="stat-label">Torneios</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-reunioes">0</div>
+          <div class="stat-label">Reuniões</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOut(event)">
+  <div class="modal">
+    <div class="modal-title">
+      Novo Evento
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nome do evento</label>
+      <input class="form-input" id="evName" type="text" placeholder="ex: Treino Mirage">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tipo</label>
+      <select class="form-select" id="evType">
+        <option value="treino">Treino</option>
+        <option value="partida">Partida</option>
+        <option value="torneio">Torneio</option>
+        <option value="reuniao">Reunião</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Data</label>
+        <input class="form-input" id="evDate" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Horário</label>
+        <input class="form-input" id="evTime" type="time">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Adversário / Descrição</label>
+      <input class="form-input" id="evDesc" type="text" placeholder="ex: vs Fúria / Nuke">
+    </div>
+    <button class="submit-btn" onclick="saveEvent()">Criar Evento</button>
+  </div>
+</div>
+
+<script>
+const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const WEEKDAYS_SHORT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+let today = new Date();
+let viewYear = today.getFullYear();
+let viewMonth = today.getMonth();
+let selectedDate = null;
+let activeFilter = 'all';
+
+const roster = [
+  { nick: 'FalleN', role: 'IGL / AWPer', status: 'online' },
+  { nick: 'KSCERATO', role: 'Rifler', status: 'online' },
+  { nick: 'yuurih', role: 'Rifler', status: 'away' },
+  { nick: 'arT', role: 'Entry Fragger', status: 'online' },
+  { nick: 'chelo', role: 'Support', status: 'away' },
+];
+
+let events = [];
+
+function seedEvents() {
+  const y = today.getFullYear(), m = today.getMonth();
+  const seed = [
+    { name: 'Treino Mirage', type: 'treino', day: 3, time: '19:00', desc: 'vs FaZe' },
+    { name: 'Treino Inferno', type: 'treino', day: 6, time: '20:00', desc: 'mapa aberto' },
+    { name: 'Partida Liga', type: 'partida', day: 8, time: '15:00', desc: 'vs FURIA' },
+    { name: 'Reunião Tática', type: 'reuniao', day: 10, time: '14:00', desc: 'análise de demos' },
+    { name: 'Torneio Open', type: 'torneio', day: 14, time: '12:00', desc: 'fase de grupos' },
+    { name: 'Treino Nuke', type: 'treino', day: 15, time: '18:30', desc: 'foco T side' },
+    { name: 'Treino Dust2', type: 'treino', day: 17, time: '20:00', desc: 'scrimmage' },
+    { name: 'Partida Campeonato', type: 'partida', day: 19, time: '17:00', desc: 'vs paiN Gaming' },
+    { name: 'Reunião Estratégia', type: 'reuniao', day: 21, time: '16:00', desc: 'new strats' },
+    { name: 'Torneio Finals', type: 'torneio', day: 24, time: '13:00', desc: 'semifinal' },
+    { name: 'Partida Decisiva', type: 'partida', day: 26, time: '19:00', desc: 'vs LOUD' },
+    { name: 'Treino Overpass', type: 'treino', day: 28, time: '20:00', desc: 'revisão CT' },
+    { name: 'Treino Livre', type: 'treino', day: today.getDate(), time: '18:00', desc: 'deathmatch' },
+    { name: 'Reunião Mensal', type: 'reuniao', day: today.getDate(), time: '21:00', desc: 'planejamento' },
+  ];
+  seed.forEach(e => {
+    const d = new Date(y, m, e.day);
+    events.push({ id: Date.now() + Math.random(), name: e.name, type: e.type, date: fmtDate(d), time: e.time, desc: e.desc });
+  });
+}
+
+function fmtDate(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function getEventsFor(dateStr) {
+  return events.filter(e => e.date === dateStr && (activeFilter === 'all' || e.type === activeFilter));
+}
+
+function renderRoster() {
+  const el = document.getElementById('rosterList');
+  el.innerHTML = roster.map(p => `
+    <div class="player-row">
+      <div class="player-avatar">${p.nick.substring(0,2).toUpperCase()}</div>
+      <div class="player-info">
+        <div class="player-nick">${p.nick}</div>
+        <div class="player-role">${p.role}</div>
+      </div>
+      <div class="player-status ${p.status}"></div>
+    </div>
+  `).join('');
+}
+
+function renderMiniCal() {
+  const title = document.getElementById('miniCalTitle');
+  title.textContent = `${MONTHS[viewMonth].substring(0,3).toUpperCase()} ${viewYear}`;
+  const grid = document.getElementById('miniGrid');
+  const dayLabels = ['D','S','T','Q','Q','S','S'];
+  let html = dayLabels.map(d => `<div class="mini-day-label">${d}</div>`).join('');
+  const first = new Date(viewYear, viewMonth, 1).getDay();
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const prevDays = new Date(viewYear, viewMonth, 0).getDate();
+  for (let i = 0; i < first; i++) {
+    html += `<div class="mini-day other-month">${prevDays - first + i + 1}</div>`;
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = d === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
+    const isSel = selectedDate === dateStr;
+    const hasEv = getEventsFor(dateStr).length > 0;
+    html += `<div class="mini-day${isToday?' today':''}${isSel?' selected':''}${hasEv?' has-event':''}" onclick="selectDay('${dateStr}')">${d}</div>`;
+  }
+  const remaining = 42 - first - daysInMonth;
+  for (let d = 1; d <= remaining; d++) {
+    html += `<div class="mini-day other-month">${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function renderCalGrid() {
+  document.getElementById('calTitle').textContent = `${MONTHS[viewMonth].toUpperCase()} ${viewYear}`;
+  const grid = document.getElementById('calGrid');
+  const first = new Date(viewYear, viewMonth, 1).getDay();
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const prevDays = new Date(viewYear, viewMonth, 0).getDate();
+  let html = '';
+  for (let i = 0; i < first; i++) {
+    const d = prevDays - first + i + 1;
+    const pm = viewMonth === 0 ? 11 : viewMonth - 1;
+    const py = viewMonth === 0 ? viewYear - 1 : viewYear;
+    const ds = `${py}-${String(pm+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    html += renderCell(d, ds, true);
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const ds = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = d === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
+    html += renderCell(d, ds, false, isToday);
+  }
+  const total = first + daysInMonth;
+  const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
+  for (let d = 1; d <= remaining; d++) {
+    const nm = viewMonth === 11 ? 0 : viewMonth + 1;
+    const ny = viewMonth === 11 ? viewYear + 1 : viewYear;
+    const ds = `${ny}-${String(nm+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    html += renderCell(d, ds, true);
+  }
+  grid.innerHTML = html;
+}
+
+function renderCell(d, ds, otherMonth, isToday) {
+  const evs = getEventsFor(ds);
+  const isSel = selectedDate === ds;
+  let cls = 'cal-cell';
+  if (otherMonth) cls += ' other-month';
+  if (isToday) cls += ' today';
+  if (isSel) cls += ' selected';
+  let evHtml = '';
+  const maxShow = 3;
+  evs.slice(0, maxShow).forEach(e => {
+    evHtml += `<div class="event-pill ${e.type}" onclick="event.stopPropagation();selectDay('${ds}')">
+      <span class="event-time">${e.time}</span>
+      <span class="event-name">${e.name}</span>
+    </div>`;
+  });
+  if (evs.length > maxShow) {
+    evHtml += `<div class="more-events">+${evs.length - maxShow} mais</div>`;
+  }
+  return `<div class="${cls}" onclick="selectDay('${ds}')">
+    <span class="cell-number">${String(d).padStart(2,'0')}</span>
+    ${evHtml}
+  </div>`;
+}
+
+function renderRightPanel() {
+  if (!selectedDate) return;
+  const [y, m, d] = selectedDate.split('-').map(Number);
+  const dt = new Date(y, m - 1, d);
+  document.getElementById('selectedDayTitle').textContent = String(d).padStart(2, '0');
+  document.getElementById('selectedDayFull').textContent = `${WEEKDAYS_SHORT[dt.getDay()].toUpperCase()} // ${MONTHS[m-1].toUpperCase()} ${y}`;
+  const evs = getEventsFor(selectedDate);
+  const list = document.getElementById('dayEventsList');
+  if (evs.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">◉</div><div class="empty-text">Nenhum evento</div></div>`;
+  } else {
+    list.innerHTML = evs.map(e => `
+      <div class="event-detail-card ${e.type}" style="margin-bottom:8px">
+        <div class="event-card-type ${e.type}">${e.type.toUpperCase()}</div>
+        <div class="event-card-title">${e.name}</div>
+        <div class="event-card-meta">
+          <span class="meta-item"><span class="meta-icon">◷</span>${e.time}</span>
+          ${e.desc ? `<span class="meta-item"><span class="meta-icon">◈</span>${e.desc}</span>` : ''}
+        </div>
+        <div class="event-card-players">
+          ${roster.map(p => `<span class="player-chip">${p.nick}</span>`).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function renderStats() {
+  const allInMonth = events.filter(e => {
+    const [y, m] = e.date.split('-').map(Number);
+    return y === viewYear && m === viewMonth + 1;
+  });
+  document.getElementById('stat-treinos').textContent = allInMonth.filter(e => e.type === 'treino').length;
+  document.getElementById('stat-partidas').textContent = allInMonth.filter(e => e.type === 'partida').length;
+  document.getElementById('stat-torneios').textContent = allInMonth.filter(e => e.type === 'torneio').length;
+  document.getElementById('stat-reunioes').textContent = allInMonth.filter(e => e.type === 'reuniao').length;
+}
+
+function renderCounts() {
+  const allInMonth = events.filter(e => {
+    const [y, m] = e.date.split('-').map(Number);
+    return y === viewYear && m === viewMonth + 1;
+  });
+  document.getElementById('count-all').textContent = allInMonth.length;
+  document.getElementById('count-treino').textContent = allInMonth.filter(e=>e.type==='treino').length;
+  document.getElementById('count-partida').textContent = allInMonth.filter(e=>e.type==='partida').length;
+  document.getElementById('count-torneio').textContent = allInMonth.filter(e=>e.type==='torneio').length;
+  document.getElementById('count-reuniao').textContent = allInMonth.filter(e=>e.type==='reuniao').length;
+}
+
+function renderAll() {
+  renderMiniCal();
+  renderCalGrid();
+  renderRightPanel();
+  renderStats();
+  renderCounts();
+}
+
+function selectDay(ds) {
+  selectedDate = ds;
+  renderAll();
+}
+
+function navMonth(dir) {
+  viewMonth += dir;
+  if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+  if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+  renderAll();
+}
+
+function miniNavMonth(dir) {
+  viewMonth += dir;
+  if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+  if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+  renderAll();
+}
+
+function goToday() {
+  viewYear = today.getFullYear();
+  viewMonth = today.getMonth();
+  selectDay(fmtDate(today));
+}
+
+function toggleFilter(el, type) {
+  activeFilter = type;
+  document.querySelectorAll('.filter-item').forEach(f => f.classList.remove('active'));
+  el.classList.add('active');
+  renderAll();
+}
+
+function setView(v) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function openModal() {
+  document.getElementById('modalOverlay').classList.add('open');
+  if (selectedDate) document.getElementById('evDate').value = selectedDate;
+  document.getElementById('evTime').value = '19:00';
+}
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+function closeModalOut(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function saveEvent() {
+  const name = document.getElementById('evName').value.trim();
+  const type = document.getElementById('evType').value;
+  const date = document.getElementById('evDate').value;
+  const time = document.getElementById('evTime').value;
+  const desc = document.getElementById('evDesc').value.trim();
+  if (!name || !date) return;
+  events.push({ id: Date.now(), name, type, date, time, desc });
+  document.getElementById('evName').value = '';
+  document.getElementById('evDesc').value = '';
+  closeModal();
+  if (date) {
+    const [y, m] = date.split('-').map(Number);
+    viewYear = y; viewMonth = m - 1;
+    selectDay(date);
+  } else renderAll();
+}
+
+// INIT
+seedEvents();
+renderRoster();
+selectDay(fmtDate(today));
+</script>
+</body>
+</html>

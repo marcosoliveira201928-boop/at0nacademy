@@ -3,118 +3,150 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mapas - Táticas</title>
+  <title>Mapas — ATON Gaming</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #1a1a1a;
-      color: #e2e8f0;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #090909; --bg-card: #111111; --bg-hover: #161616;
+      --border: #1e1e1e; --border-accent: #2a2a2a;
+      --text-primary: #f0f0f0; --text-secondary: #666; --text-muted: #333;
+      --accent: #e63946; --accent-dim: rgba(230,57,70,0.10);
     }
 
-  header {
-      background: #1a1a1a;
-      padding: 20px;
-      text-align: center;
-      border-bottom: 1px solid #2a2a2a;
+    body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; }
+
+    header {
+      background: var(--bg); padding: 28px 40px 24px; border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
     }
 
-    header img {
-      height: 80px;
-      margin-bottom: 10px;
+    header img { height: 64px; object-fit: contain; }
+    .header-title-row { display: flex; align-items: center; gap: 16px; }
+    .header-divider { width: 1px; height: 28px; background: var(--border-accent); }
+    header h1 { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 28px; letter-spacing: 6px; color: var(--text-primary); margin: 0; }
+    .header-sub { font-size: 10px; font-family: 'Share Tech Mono', monospace; color: var(--text-muted); letter-spacing: 3px; text-transform: uppercase; }
+
+    .map-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+      border: 1px solid var(--accent); background: var(--accent-dim); color: var(--accent);
+      font-size: 9px; font-family: 'Share Tech Mono', monospace; letter-spacing: 2px; text-transform: uppercase; border-radius: 2px;
+    }
+    .map-badge::before { content: ''; display: inline-block; width: 5px; height: 5px; background: var(--accent); border-radius: 50%; }
+
+    nav {
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      gap: 2px; padding: 0 24px; position: sticky; top: 0; z-index: 50;
     }
 
-    header h1 {
-      margin: 0;
-      color: #ffffff;
-      font-size: 24px;
+    .nav-link {
+      display: inline-flex; align-items: center; gap: 7px; padding: 13px 18px;
+      font-size: 10px; font-family: 'Share Tech Mono', monospace; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--text-muted); text-decoration: none;
+      border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; white-space: nowrap;
     }
+    .nav-link:hover { color: var(--text-secondary); }
+    .nav-link.active { color: var(--text-primary); border-bottom-color: var(--accent); }
+    .nav-dot { width: 5px; height: 5px; border-radius: 1px; background: currentColor; opacity: 0.5; flex-shrink: 0; }
+    .nav-link.active .nav-dot { opacity: 1; background: var(--accent); }
+    .nav-sep { width: 1px; height: 16px; background: var(--border); margin: 0 4px; }
 
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 20px;
-    }
+    .container { max-width: 1100px; margin: auto; padding: 40px 24px 60px; }
 
-    .maps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
+    .section-intro { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+    .section-intro-line { flex: 1; height: 1px; background: var(--border); }
+    .section-intro-label { font-size: 9px; font-family: 'Share Tech Mono', monospace; color: var(--text-muted); letter-spacing: 2.5px; text-transform: uppercase; white-space: nowrap; }
+
+    .maps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
 
     .map-card {
-      background: transparent;
-      border: none;
-      border-radius: 0;
-      overflow: hidden;
-      text-align: center;
-      transition: 0.3s;
-      cursor: pointer;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px;
+      overflow: hidden; cursor: pointer; transition: border-color 0.2s; position: relative;
     }
+    .map-card::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--accent); opacity: 0; transition: opacity 0.2s; z-index: 2; }
+    .map-card:hover { border-color: var(--border-accent); }
+    .map-card:hover::before { opacity: 1; }
+    .map-card a { text-decoration: none; color: inherit; display: block; }
 
-    .map-card:hover {
-      transform: scale(1.05);
-    }
+    .map-img-wrap { position: relative; overflow: hidden; }
+    .map-card img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform 0.35s; filter: brightness(0.75); }
+    .map-card:hover img { transform: scale(1.05); filter: brightness(0.9); }
 
-    .map-card img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-    }
+    .map-overlay { position: absolute; inset: 0; background: rgba(230,57,70,0); transition: background 0.2s; }
+    .map-card:hover .map-overlay { background: rgba(230,57,70,0.05); }
 
-    .map-card h2 {
-      display: none;
-    }
+    .map-info { padding: 14px 16px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .map-name { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-primary); }
+    .map-arrow { font-size: 12px; font-family: 'Share Tech Mono', monospace; color: var(--text-muted); transition: color 0.2s, transform 0.2s; }
+    .map-card:hover .map-arrow { color: var(--accent); transform: translateX(4px); }
 
-    .map-card a {
-      text-decoration: none;
-      color: inherit;
-      display: block;
-      padding-bottom: 10px;
-    }
+    footer { text-align: center; padding: 20px; border-top: 1px solid var(--border); margin-top: 20px; color: var(--text-muted); font-size: 10px; font-family: 'Share Tech Mono', monospace; letter-spacing: 2px; text-transform: uppercase; }
 
-    footer {
-      text-align: center;
-      padding: 15px;
-      border-top: 1px solid #1e293b;
-      margin-top: 30px;
+    @media (max-width: 600px) {
+      header { padding: 20px 16px; } header h1 { font-size: 20px; letter-spacing: 4px; }
+      .container { padding: 24px 12px 40px; }
+      nav { justify-content: flex-start; overflow-x: auto; } nav::-webkit-scrollbar { display: none; }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <img src="imgs/aton.png" alt="Aton Academy">
-  <h1>ESCOLHA O MAPA</h1>
+  <img src="imgs/aton.png" alt="Aton Gaming">
+  <div class="header-title-row">
+    <div class="header-divider"></div>
+    <div><h1>ESCOLHA O MAPA</h1><div class="header-sub">CS2 // Táticas</div></div>
+    <div class="header-divider"></div>
+  </div>
+  <span class="map-badge">Selecione um mapa</span>
 </header>
+
+<nav>
+  <a href="inicio.html"    class="nav-link"><span class="nav-dot"></span>Início</a>
+  <div class="nav-sep"></div>
+  <a href="agenda.html"    class="nav-link"><span class="nav-dot"></span>Agenda</a>
+  <div class="nav-sep"></div>
+  <a href="main.html"   class="nav-link active"><span class="nav-dot"></span>Mapas</a>
+  <div class="nav-sep"></div>
+  <a href="ancient.html" class="nav-link"><span class="nav-dot"></span>Ancient</a>
+  <a href="mirage.html"  class="nav-link"><span class="nav-dot"></span>Mirage</a>
+</nav>
 
 <div class="container">
 
-  <div class="maps">
+  <div class="section-intro">
+    <div class="section-intro-line"></div>
+    <div class="section-intro-label">Mapas Disponíveis</div>
+    <div class="section-intro-line"></div>
+  </div>
 
-    <!-- DUST2 -->
+  <div class="maps">
     <div class="map-card">
       <a href="ancient.html">
-        <img src="./imgs/ancient.jpg" alt="Dust2">
-        <h2>Dust2</h2>
+        <div class="map-img-wrap">
+          <img src="./imgs/ancient.jpg" alt="Ancient">
+          <div class="map-overlay"></div>
+        </div>
+        <div class="map-info"><span class="map-name">Ancient</span><span class="map-arrow">→</span></div>
       </a>
     </div>
 
-    <!-- MIRAGE -->
     <div class="map-card">
       <a href="mirage.html">
-        <img src="./imgs/mirage.jpg" alt="Mirage">
-        <h2>Mirage</h2>
+        <div class="map-img-wrap">
+          <img src="./imgs/mirage.jpg" alt="Mirage">
+          <div class="map-overlay"></div>
+        </div>
+        <div class="map-info"><span class="map-name">Mirage</span><span class="map-arrow">→</span></div>
       </a>
     </div>
-
   </div>
 
 </div>
 
-<footer>
-  Selecione um mapa para ver as táticas
-</footer>
+<footer>Selecione um mapa para ver as táticas — At0n Gaming</footer>
 
 </body>
 </html>

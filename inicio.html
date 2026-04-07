@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Início — ATON Gaming</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    /* =========================================
+       VARIÁVEIS E BASE (MANTIDO DA ESTRUTURA)
+       ========================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #090909; 
+      --bg-card: #111111; 
+      --bg-hover: #161616;
+      --border: #1e1e1e; 
+      --border-accent: #2a2a2a;
+      --text-primary: #f0f0f0; 
+      --text-secondary: #666; 
+      --text-muted: #333;
+      --accent: #e63946; 
+      --accent-dim: rgba(230,57,70,0.10);
+      --blue: #3a86ff; 
+      --amber: #f4a21e;
+    }
+
+    body { 
+      margin: 0; 
+      font-family: 'Inter', sans-serif; 
+      background: var(--bg); 
+      color: var(--text-primary); 
+    }
+
+    /* =========================================
+       HEADER & NAV
+       ========================================= */
+    header {
+      background: var(--bg); padding: 28px 40px 24px; border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+    }
+
+    header img { height: 64px; object-fit: contain; }
+    .header-title-row { display: flex; align-items: center; gap: 16px; }
+    .header-divider { width: 1px; height: 28px; background: var(--border-accent); }
+
+    header h1 {
+      font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 28px;
+      letter-spacing: 6px; color: var(--text-primary); margin: 0;
+    }
+
+    .header-sub { font-size: 10px; font-family: 'Share Tech Mono', monospace; color: var(--text-muted); letter-spacing: 3px; text-transform: uppercase; }
+
+    .map-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+      border: 1px solid var(--accent); background: var(--accent-dim); color: var(--accent);
+      font-size: 9px; font-family: 'Share Tech Mono', monospace; letter-spacing: 2px; text-transform: uppercase; border-radius: 2px;
+    }
+    .map-badge::before { content: ''; display: inline-block; width: 5px; height: 5px; background: var(--accent); border-radius: 50%; }
+
+    nav {
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      gap: 2px; padding: 0 24px; position: sticky; top: 0; z-index: 50;
+    }
+
+    .nav-link {
+      display: inline-flex; align-items: center; gap: 7px; padding: 13px 18px;
+      font-size: 10px; font-family: 'Share Tech Mono', monospace; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--text-muted); text-decoration: none;
+      border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--text-secondary); }
+    .nav-link.active { color: var(--text-primary); border-bottom-color: var(--accent); }
+    .nav-dot { width: 5px; height: 5px; border-radius: 1px; background: currentColor; opacity: 0.5; flex-shrink: 0; }
+    .nav-link.active .nav-dot { opacity: 1; background: var(--accent); }
+    .nav-sep { width: 1px; height: 16px; background: var(--border); margin: 0 4px; }
+
+    /* =========================================
+       ESTILO DO NOVO BOTÃO
+       ========================================= */
+    .eval-container { text-align: center; margin-bottom: 50px; }
+    
+    .btn-eval {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 14px 32px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .btn-eval:hover {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 0 20px rgba(230, 57, 70, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* =========================================
+       CONTEÚDO PRINCIPAL
+       ========================================= */
+    .container { max-width: 1040px; margin: auto; padding: 40px 24px 60px; }
+    
+    .section-intro { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+    .section-intro-line { flex: 1; height: 1px; background: var(--border); }
+    .section-intro-label { font-size: 14px; font-family: 'Rajdhani', sans-serif; font-weight: 600; color: var(--text-primary); letter-spacing: 3px; text-transform: uppercase; white-space: nowrap; }
+
+    .team-desc {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 14px;
+      max-width: 600px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+
+    /* GRID DE JOGADORES */
+    .roster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .player-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .player-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 2;
+    }
+
+    .player-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .player-card:hover::before { opacity: 1; }
+
+    .player-photo {
+      width: 100%;
+      aspect-ratio: 4/5;
+      background: #050505;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .player-photo img {
+      width: 100%; height: 100%; object-fit: cover; object-position: top;
+      filter: grayscale(100%) contrast(1.1); transition: all 0.4s ease;
+    }
+
+    .player-card:hover .player-photo img {
+      filter: grayscale(0%) contrast(1.1);
+      transform: scale(1.05);
+    }
+
+    .role-badge {
+      position: absolute; bottom: 12px; right: 12px;
+      background: rgba(9, 9, 9, 0.85); border: 1px solid var(--border-accent);
+      color: var(--text-primary); padding: 6px 12px;
+      font-size: 10px; font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 2px; text-transform: uppercase; border-radius: 2px;
+      backdrop-filter: blur(4px);
+    }
+
+    .role-badge.igl { border-color: var(--accent); color: var(--accent); }
+    .role-badge.rifler { border-color: var(--amber); color: var(--amber); }
+
+    .player-info {
+      padding: 20px; text-align: center;
+      background: linear-gradient(to bottom, var(--bg-card), var(--bg));
+    }
+
+    .player-nick {
+      font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 24px;
+      letter-spacing: 2px; color: var(--text-primary); margin-bottom: 4px; text-transform: uppercase;
+    }
+
+    .player-name {
+      font-size: 11px; font-family: 'Share Tech Mono', monospace;
+      color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase;
+    }
+
+    footer { text-align: center; padding: 30px 20px; border-top: 1px solid var(--border); margin-top: 40px; color: var(--text-muted); font-size: 10px; font-family: 'Share Tech Mono', monospace; letter-spacing: 2px; text-transform: uppercase; }
+
+    @media (max-width: 600px) {
+      header { padding: 20px 16px; } header h1 { font-size: 20px; letter-spacing: 4px; }
+      nav { justify-content: flex-start; overflow-x: auto; }
+      .container { padding: 24px 16px 40px; }
+      .roster-grid { grid-template-columns: 1fr; max-width: 340px; margin: 0 auto; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="imgs/aton.png" alt="Aton Gaming" onerror="this.style.display='none'"> 
+  <div class="header-title-row">
+    <div class="header-divider"></div>
+    <div style="text-align: center;">
+      <h1>INÍCIO</h1>
+      <div class="header-sub">CS2 // ATON GAMING</div>
+    </div>
+    <div class="header-divider"></div>
+  </div>
+  <span class="map-badge">Apresentação da Equipe</span>
+</header>
+
+<nav>
+  <a href="main.html"    class="nav-link active"><span class="nav-dot"></span>Início</a>
+  <div class="nav-sep"></div>
+  <a href="agenda.html"  class="nav-link"><span class="nav-dot"></span>Agenda</a>
+  <div class="nav-sep"></div>
+  <a href="#"            class="nav-link"><span class="nav-dot"></span>Mapas</a>
+  <div class="nav-sep"></div>
+  <a href="ancient.html" class="nav-link"><span class="nav-dot"></span>Ancient</a>
+  <a href="mirage.html"  class="nav-link"><span class="nav-dot"></span>Mirage</a>
+</nav>
+
+<div class="container">
+
+  <p class="team-desc">
+    Bem-vindo ao portal da ATON Gaming. Nossa estrutura tática, agenda de treinos e materiais de estudo organizados em um só lugar. Conheça a nossa line-up principal de Counter-Strike 2.
+  </p>
+
+  <div class="eval-container">
+    <a href="teste.html" class="btn-eval">
+      [ INICIAR AVALIAÇÃO DE APTIDÃO ]
+    </a>
+  </div>
+
+  <div class="section-intro">
+    <div class="section-intro-line"></div>
+    <div class="section-intro-label">Roster Principal</div>
+    <div class="section-intro-line"></div>
+  </div>
+
+  <div class="roster-grid">
+    <div class="player-card">
+      <div class="player-photo">
+        <img src="imgs/players/ESTRELA.png" alt="Estrela" onerror="this.src='https://via.placeholder.com/400x500/1e1e1e/333333?text=FOTO'">
+        <div class="role-badge igl">IGL / AWPer</div>
+      </div>
+      <div class="player-info">
+        <div class="player-nick">Estrela</div>
+        <div class="player-name">Gabriel Henrique Estrela</div>
+      </div>
+    </div>
+
+    <div class="player-card">
+      <div class="player-photo">
+        <img src="imgs/players/RFZ.png" alt="Rfz" onerror="this.src='https://via.placeholder.com/400x500/1e1e1e/333333?text=FOTO'">
+        <div class="role-badge rifler">Rifler</div>
+      </div>
+      <div class="player-info">
+        <div class="player-nick">Rfz</div>
+        <div class="player-name">Raul Fernandes Casula</div>
+      </div>
+    </div>
+
+    <div class="player-card">
+      <div class="player-photo">
+        <img src="imgs/players/Wit_ (2).png" alt="Wit" onerror="this.src='https://via.placeholder.com/400x500/1e1e1e/333333?text=FOTO'">
+        <div class="role-badge rifler">Rifler</div>
+      </div>
+      <div class="player-info">
+        <div class="player-nick">Wit</div>
+        <div class="player-name">Lucas Witkoski</div>
+      </div>
+    </div>
+
+    <div class="player-card">
+      <div class="player-photo">
+        <img src="imgs/players/VITA1.png" alt="Vita1" onerror="this.src='https://via.placeholder.com/400x500/1e1e1e/333333?text=FOTO'">
+        <div class="role-badge" style="border-color: var(--accent); color: var(--accent);">Entry Fragger</div>
+      </div>
+      <div class="player-info">
+        <div class="player-nick">Vita1</div>
+        <div class="player-name">Victor Pereira Rodrigues</div>
+      </div>
+    </div>
+
+    <div class="player-card">
+      <div class="player-photo">
+        <img src="imgs/players/NGL.png" alt="Ngl" onerror="this.src='https://via.placeholder.com/400x500/1e1e1e/333333?text=FOTO'">
+        <div class="role-badge rifler">Rifler</div>
+      </div>
+      <div class="player-info">
+        <div class="player-nick">Ngl</div>
+        <div class="player-name">Angelo Antonio Leite</div>
+      </div>
+    </div>
+
+    <div class="player-card">
+      <div class="player-photo">
+        <img src="imgs/players/COACH.png" alt="Mvo" onerror="this.src='https://via.placeholder.com/400x500/1e1e1e/333333?text=FOTO'">
+        <div class="role-badge" style="border-color: var(--accent); color: var(--accent);">Coach</div>
+      </div>
+      <div class="player-info">
+        <div class="player-nick">Mvo</div>
+        <div class="player-name">Marcos Vinicius</div>
+      </div>
+    </div>
+
+  </div> 
+</div>
+
+<footer>Portal Oficial — ATON Gaming © 2024</footer>
+
+</body>
+</html>

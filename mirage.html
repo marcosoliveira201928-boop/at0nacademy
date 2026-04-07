@@ -3,487 +3,379 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mirage </title>
+  <title>Mirage — ATON Gaming</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #1a1a1a;
-      color: #e5e5e5;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #090909;
+      --bg-card: #111111;
+      --bg-hover: #161616;
+      --border: #1e1e1e;
+      --border-accent: #2a2a2a;
+      --text-primary: #f0f0f0;
+      --text-secondary: #666;
+      --text-muted: #333;
+      --accent: #e63946;
+      --accent-dim: rgba(230, 57, 70, 0.10);
+      --blue: #3a86ff;
+      --amber: #f4a21e;
     }
 
+    body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-primary); }
+
+    /* HEADER */
     header {
-      background: #1a1a1a;
-      padding: 20px;
-      text-align: center;
-      border-bottom: 1px solid #2a2a2a;
+      background: var(--bg);
+      padding: 28px 40px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
     }
 
-    header img {
-      height: 80px;
-      margin-bottom: 10px;
-    }
+    header img { height: 64px; object-fit: contain; }
+    .header-title-row { display: flex; align-items: center; gap: 16px; }
+    .header-divider { width: 1px; height: 28px; background: var(--border-accent); }
 
     header h1 {
-      margin: 0;
-      color: #ffffff;
-      font-size: 24px;
+      font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 28px;
+      letter-spacing: 6px; color: var(--text-primary); margin: 0;
     }
 
-    .container {
-      max-width: 1000px;
-      margin: auto;
-      padding: 20px;
+    .header-sub {
+      font-size: 10px; font-family: 'Share Tech Mono', monospace;
+      color: var(--text-muted); letter-spacing: 3px; text-transform: uppercase;
     }
 
+    .map-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border: 1px solid var(--accent);
+      background: var(--accent-dim); color: var(--accent);
+      font-size: 9px; font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 2px; text-transform: uppercase; border-radius: 2px;
+    }
+
+    .map-badge::before {
+      content: ''; display: inline-block; width: 5px; height: 5px;
+      background: var(--accent); border-radius: 50%;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      gap: 2px; padding: 0 24px;
+      position: sticky; top: 0; z-index: 50;
+    }
+
+    .nav-link {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 13px 18px;
+      font-size: 10px; font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text-muted); text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover { color: var(--text-secondary); }
+
+    .nav-link.active { color: var(--text-primary); border-bottom-color: var(--accent); }
+
+    .nav-dot {
+      width: 5px; height: 5px; border-radius: 1px;
+      background: currentColor; opacity: 0.5; flex-shrink: 0;
+    }
+
+    .nav-link.active .nav-dot { opacity: 1; background: var(--accent); }
+
+    .nav-sep { width: 1px; height: 16px; background: var(--border); margin: 0 4px; }
+
+    /* CONTAINER */
+    .container { max-width: 1040px; margin: auto; padding: 40px 24px 60px; }
+
+    .section-intro { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+    .section-intro-line { flex: 1; height: 1px; background: var(--border); }
+    .section-intro-label {
+      font-size: 9px; font-family: 'Share Tech Mono', monospace;
+      color: var(--text-muted); letter-spacing: 2.5px; text-transform: uppercase; white-space: nowrap;
+    }
+
+    /* TATIC */
     .tatic {
-      background: #111111;
-      border: 1px solid #2a2a2a;
-      border-radius: 10px;
-      margin-bottom: 25px;
-      padding: 20px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 3px; margin-bottom: 20px; padding: 22px 22px 18px;
+      transition: border-color 0.2s; position: relative; overflow: hidden;
     }
+
+    .tatic::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; background: var(--accent); opacity: 0; transition: opacity 0.2s;
+    }
+
+    .tatic:hover { border-color: var(--border-accent); }
+    .tatic:hover::before { opacity: 1; }
+
+    .tatic-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 
     .tatic h2 {
-      color: #ffffff;
-      margin-top: 0;
+      font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 16px;
+      letter-spacing: 2px; color: var(--text-primary); text-transform: uppercase; margin: 0;
     }
 
-    .images {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 10px;
-      margin: 15px 0;
-    }
+    .tatic-type { font-size: 9px; font-family: 'Share Tech Mono', monospace; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; }
+    .tatic-type.smoke   { color: var(--blue); }
+    .tatic-type.molotov { color: var(--amber); }
 
-    .img-box {
-      position: relative;
-    }
+    /* IMAGES */
+    .images { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin: 12px 0 0; }
 
-    .img-box img {
-      width: 100%;
-      border-radius: 8px;
-      border: 1px solid #2a2a2a;
-      transition: 0.3s;
-      cursor: pointer;
-    }
+    .img-box { position: relative; overflow: hidden; border-radius: 2px; border: 1px solid var(--border); background: #0a0a0a; cursor: pointer; }
 
-    .img-box img:hover {
-      transform: scale(1.03);
-    }
+    .img-box::after { content: ''; position: absolute; inset: 0; background: rgba(230,57,70,0); transition: background 0.2s; pointer-events: none; }
+    .img-box:hover::after { background: rgba(230,57,70,0.06); }
+
+    .img-box img { width: 100%; display: block; transition: transform 0.3s; }
+    .img-box:hover img { transform: scale(1.04); }
 
     .img-box span {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0,0,0,0.6);
-      color: #fff;
-      padding: 5px 10px;
-      border-radius: 5px;
-      font-size: 13px;
-      pointer-events: none;
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.75); color: var(--text-primary);
+      padding: 6px 10px; font-size: 10px; font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 1px; pointer-events: none; border-top: 1px solid var(--border);
     }
 
     .desc {
-      background: #1a1a1a;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #2a2a2a;
-      font-size: 14px;
+      background: var(--bg); padding: 10px 12px; border-radius: 2px;
+      border: 1px solid var(--border); font-size: 12px; color: var(--text-secondary);
+      margin-top: 10px; font-family: 'Share Tech Mono', monospace; letter-spacing: 0.5px;
     }
+    .desc:empty { display: none; }
 
+    /* FOOTER */
     footer {
-      text-align: center;
-      padding: 15px;
-      border-top: 1px solid #2a2a2a;
-      margin-top: 30px;
-      color: #888;
+      text-align: center; padding: 20px; border-top: 1px solid var(--border);
+      margin-top: 20px; color: var(--text-muted); font-size: 10px;
+      font-family: 'Share Tech Mono', monospace; letter-spacing: 2px; text-transform: uppercase;
     }
 
+    /* MODAL */
     #modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.95);
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.96); justify-content: center; align-items: center; z-index: 999;
     }
 
-    .modal-content {
-      position: relative;
-    }
+    .modal-content { position: relative; display: flex; align-items: center; justify-content: center; }
 
-    #modal img {
-      max-width: 85%;
-      max-height: 85%;
-      border-radius: 10px;
-    }
+    #modal img { max-width: 85vw; max-height: 82vh; border-radius: 2px; border: 1px solid var(--border-accent); display: block; }
 
     #modal-text {
-      position: absolute;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.7);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 5px;
-      font-size: 14px;
+      position: absolute; bottom: -1px; left: 0; right: 0;
+      background: rgba(0,0,0,0.85); color: var(--text-primary);
+      padding: 8px 14px; font-size: 11px; font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 1.5px; text-align: center; border-top: 1px solid var(--accent);
     }
 
     #prev, #next {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 40px;
-      color: white;
-      cursor: pointer;
-      padding: 10px;
-      user-select: none;
-      z-index: 1000;
+      position: fixed; top: 50%; transform: translateY(-50%);
+      font-size: 22px; color: var(--text-secondary); cursor: pointer;
+      padding: 14px 10px; user-select: none; z-index: 1000;
+      border: 1px solid var(--border); background: var(--bg-card);
+      transition: all 0.15s; font-family: 'Share Tech Mono', monospace;
     }
 
-    #prev { left: 30px; }
-    #next { right: 30px; }
+    #prev:hover, #next:hover { color: var(--accent); border-color: var(--accent); }
+    #prev { left: 20px; }
+    #next { right: 20px; }
 
     #close {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 40px;
-      color: white;
-      cursor: pointer;
-      z-index: 1001;
+      position: fixed; top: 20px; right: 24px; font-size: 18px;
+      color: var(--text-secondary); cursor: pointer; z-index: 1001;
+      border: 1px solid var(--border); background: var(--bg-card);
+      width: 36px; height: 36px; display: flex; align-items: center;
+      justify-content: center; transition: all 0.15s; font-family: 'Share Tech Mono', monospace;
     }
 
+    #close:hover { color: var(--accent); border-color: var(--accent); }
+
+    #modal-counter {
+      position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+      font-size: 10px; font-family: 'Share Tech Mono', monospace;
+      color: var(--text-muted); letter-spacing: 2px; z-index: 1001;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 20px 16px; }
+      header h1 { font-size: 20px; letter-spacing: 4px; }
+      .container { padding: 24px 12px 40px; }
+      .tatic { padding: 16px 14px; }
+      nav { justify-content: flex-start; overflow-x: auto; }
+      nav::-webkit-scrollbar { display: none; }
+      #prev { left: 8px; }
+      #next { right: 8px; }
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <img src="imgs/aton.png" alt="Aton Academy">
-  <h1>MIRAGE</h1>
+  <img src="imgs/aton.png" alt="Aton Gaming">
+  <div class="header-title-row">
+    <div class="header-divider"></div>
+    <div>
+      <h1>MIRAGE</h1>
+      <div class="header-sub">CS2 // Táticas</div>
+    </div>
+    <div class="header-divider"></div>
+  </div>
+  <span class="map-badge">Página de Táticas</span>
 </header>
+
+<nav>
+  <a href="inicio.html"    class="nav-link"><span class="nav-dot"></span>Início</a>
+  <div class="nav-sep"></div>
+  <a href="agenda.html"    class="nav-link"><span class="nav-dot"></span>Agenda</a>
+  <div class="nav-sep"></div>
+  <a href="main.html"   class="nav-link"><span class="nav-dot"></span>Mapas</a>
+  <div class="nav-sep"></div>
+  <a href="ancient.html" class="nav-link"><span class="nav-dot"></span>Ancient</a>
+  <a href="mirage.html"  class="nav-link active"><span class="nav-dot"></span>Mirage</a>
+</nav>
 
 <div class="container">
 
-
-
-
-
-
-<div class="tatic">
-    <h2>Smoke Top Liga (tr) </h2>
-
-    <div class="images">
-      <div class="img-box">
-        <img src="imgs/mirage/8 (2).jpg">
-        <span>Pixel Posição</span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/8 (1).jpg">
-        <span>Smoke Top Liga</span>
-      </div>
-    </div>
-
-    <div class="desc">
-      
-    </div>
+  <div class="section-intro">
+    <div class="section-intro-line"></div>
+    <div class="section-intro-label">Smokes &amp; Utilitários</div>
+    <div class="section-intro-line"></div>
   </div>
-
-
-
-<div class="tatic">
-    <h2>Smoke B (L Do Lado Direito) </h2>
-
-    <div class="images">
-      <div class="img-box">
-        <img src="imgs/mirage/9 (3).jpg">
-        <span>Pixel Posição</span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/9 (1).jpg">
-        <span>Smoke Direita L </span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/9 (2).jpg">
-        <span>Smoke Direita L </span>
-        
-    </div>
-    
-  </div>
-</div>
-
-
-
-
-<div class="tatic">
-    <h2>Smoke B (L Do Lado Esquerdo) </h2>
-
-    <div class="images">
-      <div class="img-box">
-        <img src="imgs/mirage/10 (2).jpg">
-        <span>Pixel Posição</span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/10 (1).jpg">
-        <span>Smoke Top Liga</span>
-      </div>
-    </div>
-
-    <div class="desc">
-      
-    </div>
-  </div>
-
-
-<div class="tatic">
-    <h2>Kit Smoke B </h2>
-
-    <div class="images">
-      <div class="img-box">
-        <img src="imgs/mirage/11 (3).jpg">
-        <span>Pixel Posição</span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/11 (1).jpg">
-        <span>Smoke Janela </span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/11 (2).jpg">
-        <span>Smoke Porta </span>
-        
-    </div>
-    
-  </div>
-</div>
-
-
-
-
-
-<div class="tatic">
-    <h2>Smoke L (padrão) </h2>
-
-    <div class="images">
-      <div class="img-box">
-        <img src="imgs/mirage/13 (2).jpg">
-        <span>Pixel Posição</span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/13 (1).jpg">
-        <span>Smoke L</span>
-      </div>
-    </div>
-
-    <div class="desc">
-      
-    </div>
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="tatic">
-    <h2>Smoke Porta B </h2>
-
-    <div class="images">
-      <div class="img-box">
-        <img src="imgs/mirage/12 (2).jpg">
-        <span>Smoke Porta B</span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/12 (1).jpg">
-        <span>Smoke Porta B</span>
-      </div>
-    </div>
-
-    <div class="desc">
-      
-    </div>
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <div class="tatic">
-    <h2>Smoke Jungle (pistol)</h2>
-
+    <div class="tatic-header"><h2>Smoke Top Liga (tr)</h2><span class="tatic-type smoke">Smoke</span></div>
     <div class="images">
-      <div class="img-box">
-        <img src="imgs/mirage/1 (2).jpg">
-        <span>Pixel Posição</span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/1 (1).jpg">
-        <span>Smoke Jungle</span>
-      </div>
+      <div class="img-box"><img src="imgs/mirage/8 (2).jpg"><span>Pixel Posição</span></div>
+      <div class="img-box"><img src="imgs/mirage/8 (1).jpg"><span>Smoke Top Liga</span></div>
     </div>
+    <div class="desc"></div>
+  </div>
 
-    <div class="desc">
-      
+  <div class="tatic">
+    <div class="tatic-header"><h2>Smoke B (L Do Lado Direito)</h2><span class="tatic-type smoke">Smoke</span></div>
+    <div class="images">
+      <div class="img-box"><img src="imgs/mirage/9 (3).jpg"><span>Pixel Posição</span></div>
+      <div class="img-box"><img src="imgs/mirage/9 (1).jpg"><span>Smoke Direita L</span></div>
+      <div class="img-box"><img src="imgs/mirage/9 (2).jpg"><span>Smoke Direita L</span></div>
     </div>
   </div>
 
   <div class="tatic">
-    <h2>Smoke Janelão (carroça)</h2>
-
+    <div class="tatic-header"><h2>Smoke B (L Do Lado Esquerdo)</h2><span class="tatic-type smoke">Smoke</span></div>
     <div class="images">
-      <div class="img-box">
-        <img src="imgs/mirage/2 (2).jpg">
-        <span>Pixel Posição</span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/2 (1).jpg">
-        <span>Smoke Janelão</span>
-      </div>
-      </div>
+      <div class="img-box"><img src="imgs/mirage/10 (2).jpg"><span>Pixel Posição</span></div>
+      <div class="img-box"><img src="imgs/mirage/10 (1).jpg"><span>Smoke Top Liga</span></div>
     </div>
-
-    <div class="tatic">
-    <h2>Smoke L (carroça)</h2>
-
-    <div class="images">
-      <div class="img-box">
-        <img src="imgs/mirage/3 (2).jpg">
-        <span>Pixel Posição</span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/3 (1).jpg">
-        <span>Smoke L</span>
-      </div>
-      </div>
-    </div>
-
-     <div class="tatic">
-    <h2>Smoke Janelão (base TR)</h2>
-
-    <div class="images">
-      <div class="img-box">
-        <img src="imgs/mirage/4 (2).jpg">
-        <span>Pixel Posição</span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/4 (1).jpg">
-        <span>Smoke Janelão</span>
-      </div>
-      </div>
-    </div>
-
-    <div class="tatic">
-    <h2>Smoke Liga (base TR)</h2>
-
-    <div class="images">
-      <div class="img-box">
-        <img src="imgs/mirage/5 (2).jpg">
-        <span>Pixel Posição</span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/5 (1).jpg">
-        <span>Smoke Liga</span>
-      </div>
-
-      
-      </div>
-    </div>
-
-   <div class="tatic">
-    <h2>Molotov Areia Baixo (palacio) v1 </h2>
-
-    <div class="images">
-      <div class="img-box">
-        <img src="imgs/mirage/6 (2).jpg">
-        <span>Pixel Posição</span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/6 (1).jpg">
-        <span>Molotov Area Baixo</span>
-      </div>
-
-      
-      
-    </div>
-
+    <div class="desc"></div>
   </div>
+
   <div class="tatic">
-    <h2>Molotov Areia Baixo (palacio) v2 </h2>
-
+    <div class="tatic-header"><h2>Kit Smoke B</h2><span class="tatic-type smoke">Smoke</span></div>
     <div class="images">
-      <div class="img-box">
-        <img src="imgs/mirage/7 (1).jpg">
-        <span>Pixel Posição</span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/7 (2).jpg">
-        <span>Molotov Area Baixo </span>
-      </div>
-
-      <div class="img-box">
-        <img src="imgs/mirage/7 (3).jpg">
-        <span>Molotov Area Baixo </span>
-        
+      <div class="img-box"><img src="imgs/mirage/11 (3).jpg"><span>Pixel Posição</span></div>
+      <div class="img-box"><img src="imgs/mirage/11 (1).jpg"><span>Smoke Janela</span></div>
+      <div class="img-box"><img src="imgs/mirage/11 (2).jpg"><span>Smoke Porta</span></div>
     </div>
-    
   </div>
+
+  <div class="tatic">
+    <div class="tatic-header"><h2>Smoke L (padrão)</h2><span class="tatic-type smoke">Smoke</span></div>
+    <div class="images">
+      <div class="img-box"><img src="imgs/mirage/13 (2).jpg"><span>Pixel Posição</span></div>
+      <div class="img-box"><img src="imgs/mirage/13 (1).jpg"><span>Smoke L</span></div>
+    </div>
+    <div class="desc"></div>
+  </div>
+
+  <div class="tatic">
+    <div class="tatic-header"><h2>Smoke Porta B</h2><span class="tatic-type smoke">Smoke</span></div>
+    <div class="images">
+      <div class="img-box"><img src="imgs/mirage/12 (2).jpg"><span>Smoke Porta B</span></div>
+      <div class="img-box"><img src="imgs/mirage/12 (1).jpg"><span>Smoke Porta B</span></div>
+    </div>
+    <div class="desc"></div>
+  </div>
+
+  <div class="tatic">
+    <div class="tatic-header"><h2>Smoke Jungle (pistol)</h2><span class="tatic-type smoke">Smoke</span></div>
+    <div class="images">
+      <div class="img-box"><img src="imgs/mirage/1 (2).jpg"><span>Pixel Posição</span></div>
+      <div class="img-box"><img src="imgs/mirage/1 (1).jpg"><span>Smoke Jungle</span></div>
+    </div>
+    <div class="desc"></div>
+  </div>
+
+  <div class="tatic">
+    <div class="tatic-header"><h2>Smoke Janelão (carroça)</h2><span class="tatic-type smoke">Smoke</span></div>
+    <div class="images">
+      <div class="img-box"><img src="imgs/mirage/2 (2).jpg"><span>Pixel Posição</span></div>
+      <div class="img-box"><img src="imgs/mirage/2 (1).jpg"><span>Smoke Janelão</span></div>
+    </div>
+  </div>
+
+  <div class="tatic">
+    <div class="tatic-header"><h2>Smoke L (carroça)</h2><span class="tatic-type smoke">Smoke</span></div>
+    <div class="images">
+      <div class="img-box"><img src="imgs/mirage/3 (2).jpg"><span>Pixel Posição</span></div>
+      <div class="img-box"><img src="imgs/mirage/3 (1).jpg"><span>Smoke L</span></div>
+    </div>
+  </div>
+
+  <div class="tatic">
+    <div class="tatic-header"><h2>Smoke Janelão (base TR)</h2><span class="tatic-type smoke">Smoke</span></div>
+    <div class="images">
+      <div class="img-box"><img src="imgs/mirage/4 (2).jpg"><span>Pixel Posição</span></div>
+      <div class="img-box"><img src="imgs/mirage/4 (1).jpg"><span>Smoke Janelão</span></div>
+    </div>
+  </div>
+
+  <div class="tatic">
+    <div class="tatic-header"><h2>Smoke Liga (base TR)</h2><span class="tatic-type smoke">Smoke</span></div>
+    <div class="images">
+      <div class="img-box"><img src="imgs/mirage/5 (2).jpg"><span>Pixel Posição</span></div>
+      <div class="img-box"><img src="imgs/mirage/5 (1).jpg"><span>Smoke Liga</span></div>
+    </div>
+  </div>
+
+  <div class="tatic">
+    <div class="tatic-header"><h2>Molotov Areia Baixo (palacio) v1</h2><span class="tatic-type molotov">Molotov</span></div>
+    <div class="images">
+      <div class="img-box"><img src="imgs/mirage/6 (2).jpg"><span>Pixel Posição</span></div>
+      <div class="img-box"><img src="imgs/mirage/6 (1).jpg"><span>Molotov Area Baixo</span></div>
+    </div>
+  </div>
+
+  <div class="tatic">
+    <div class="tatic-header"><h2>Molotov Areia Baixo (palacio) v2</h2><span class="tatic-type molotov">Molotov</span></div>
+    <div class="images">
+      <div class="img-box"><img src="imgs/mirage/7 (1).jpg"><span>Pixel Posição</span></div>
+      <div class="img-box"><img src="imgs/mirage/7 (2).jpg"><span>Molotov Area Baixo</span></div>
+      <div class="img-box"><img src="imgs/mirage/7 (3).jpg"><span>Molotov Area Baixo</span></div>
+    </div>
+  </div>
+
 </div>
 
-<footer>
-  Página de táticas At0n Gaming
-</footer>
+<footer>Página de Táticas — At0n Gaming</footer>
 
 <div id="modal">
   <span id="close">&times;</span>
+  <span id="modal-counter"></span>
   <span id="prev">&#10094;</span>
-
   <div class="modal-content">
     <img id="modal-img">
     <span id="modal-text"></span>
   </div>
-
   <span id="next">&#10095;</span>
 </div>
 
@@ -492,56 +384,35 @@
   const modal = document.getElementById("modal");
   const modalImg = document.getElementById("modal-img");
   const modalText = document.getElementById("modal-text");
+  const modalCounter = document.getElementById("modal-counter");
   const next = document.getElementById("next");
   const prev = document.getElementById("prev");
   const close = document.getElementById("close");
-
   let currentIndex = 0;
   const imgArray = Array.from(images);
 
   function updateModal(index) {
     const img = imgArray[index];
     modalImg.src = img.src;
-    const text = img.parentElement.querySelector("span").innerText;
-    modalText.innerText = text;
+    modalText.innerText = img.parentElement.querySelector("span").innerText;
+    modalCounter.innerText = `${index + 1} / ${imgArray.length}`;
   }
 
   images.forEach((img, index) => {
-    img.addEventListener("click", () => {
-      modal.style.display = "flex";
-      currentIndex = index;
-      updateModal(currentIndex);
-    });
+    img.addEventListener("click", () => { modal.style.display = "flex"; currentIndex = index; updateModal(currentIndex); });
   });
 
-  next.onclick = (e) => {
-    e.stopPropagation();
-    currentIndex = (currentIndex + 1) % imgArray.length;
-    updateModal(currentIndex);
-  };
-
-  prev.onclick = (e) => {
-    e.stopPropagation();
-    currentIndex = (currentIndex - 1 + imgArray.length) % imgArray.length;
-    updateModal(currentIndex);
-  };
-
-  close.onclick = (e) => {
-    e.stopPropagation();
-    modal.style.display = "none";
-  };
+  next.onclick  = (e) => { e.stopPropagation(); currentIndex = (currentIndex + 1) % imgArray.length; updateModal(currentIndex); };
+  prev.onclick  = (e) => { e.stopPropagation(); currentIndex = (currentIndex - 1 + imgArray.length) % imgArray.length; updateModal(currentIndex); };
+  close.onclick = (e) => { e.stopPropagation(); modal.style.display = "none"; };
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      modal.style.display = "none";
-    }
+    if (e.key === "Escape") modal.style.display = "none";
+    if (e.key === "ArrowRight" && modal.style.display === "flex") { currentIndex = (currentIndex + 1) % imgArray.length; updateModal(currentIndex); }
+    if (e.key === "ArrowLeft"  && modal.style.display === "flex") { currentIndex = (currentIndex - 1 + imgArray.length) % imgArray.length; updateModal(currentIndex); }
   });
 
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) {
-      modal.style.display = "none";
-    }
-  });
+  modal.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
 </script>
 
 </body>

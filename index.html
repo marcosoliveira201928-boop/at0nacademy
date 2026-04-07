@@ -1,177 +1,245 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<title>AT0N Gaming - Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AT0N Gaming — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<style>
-body {
-  margin: 0;
-  height: 100vh;
-  font-family: Arial, sans-serif;
-
-  /* fundo da imagem */
-  background: url('https://media.discordapp.net/attachments/1482819377106522144/1490112448538214581/Gemini_Generated_Image_uodijjuodijjuodi.png?ex=69d2dedc&is=69d18d5c&hm=fdc284008bac09bb89c119899a164d52323111420590709d7d4984fb5b51f56d&=&format=webp&quality=lossless') no-repeat center center;
-  background-size: cover;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-  /* LOGO */
-  .logo {
-    margin-bottom: 20px;
-    text-align: center;
-  }
-
-  .logo img {
-    width: 180px;
-  }
-
-  @keyframes glow {
-    from {
-      filter: drop-shadow(0 0 5px #ffffff);
+    :root {
+      --bg: #090909;
+      --bg-card: #111111;
+      --bg-hover: #161616;
+      --border: #1e1e1e;
+      --border-accent: #2a2a2a;
+      --text-primary: #f0f0f0;
+      --text-secondary: #666;
+      --text-muted: #333;
+      --accent: #e63946;
+      --accent-dim: rgba(230, 57, 70, 0.10);
     }
-    to {
-      filter: drop-shadow(0 0 20px #ffffff);
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: url('https://media.discordapp.net/attachments/1482819377106522144/1490112448538214581/Gemini_Generated_Image_uodijjuodijjuodi.png?ex=69d4305c&is=69d2dedc&hm=33dbf07cdfee6650204bb55b6ab82bb48af49346114201e15f5a79fc7c6c1162&=&format=webp&quality=lossless') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
     }
-  }
 
-  .box {
-    background: rgba(20, 20, 20, 0.95);
-    padding: 40px;
-    border-radius: 16px;
-    width: 320px;
-    text-align: center;
-    box-shadow: 0 0 30px rgba(0,0,0,0.8);
-    border: 1px solid rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
-    transition: 0.3s;
-  }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 9, 9, 0.72);
+      z-index: 0;
+    }
 
-  .shake {
-    animation: shake 0.3s;
-  }
+    /* LOGO */
+    .logo {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
 
-  @keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-6px); }
-    50% { transform: translateX(6px); }
-    75% { transform: translateX(-6px); }
-    100% { transform: translateX(0); }
-  }
+    .logo img {
+      width: 160px;
+      object-fit: contain;
+    }
 
-  h2 {
-    color: #fff;
-    margin-bottom: 20px;
-  }
+    .logo-label {
+      font-size: 9px;
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--text-muted);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
 
-  input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    background: #1f1f1f;
-    color: #fff;
-    transition: 0.2s;
-  }
+    /* BOX */
+    .box {
+      position: relative;
+      z-index: 1;
+      background: rgba(11, 11, 11, 0.96);
+      border: 1px solid var(--border-accent);
+      border-radius: 3px;
+      width: 320px;
+      padding: 32px 28px 28px;
+      backdrop-filter: blur(12px);
+    }
 
-  input:focus {
-    box-shadow: 0 0 8px #ffffff;
-  }
+    .box-header {
+      margin-bottom: 24px;
+      text-align: center;
+    }
 
-  input.error {
-    border: 2px solid red;
-  }
+    .box-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: 4px;
+      color: var(--text-primary);
+      text-transform: uppercase;
+    }
 
-  input.success {
-    border: 2px solid #ffffff;
-  }
+    .box-sub {
+      font-size: 9px;
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
 
-button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(90deg, #ffffff, #6b6b6b);
-  color: #000;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 10px;
-  
-  /* Transições suaves */
-  transition: all 0.4s ease; 
-  background-size: 200% 200%; /* Para animar gradiente */
-}
+    /* FORM */
+    .field {
+      margin-bottom: 12px;
+    }
 
-/* Hover com efeito profissional */
-button:hover {
-  transform: scale(1.05); /* leve aumento */
-  
-  /* Gradiente animado para cores mais chamativas */
-  background: linear-gradient(90deg, #5a5a5a, #050505, #8b8b8b);
-  background-size: 300% 300%; /* aumenta área do gradiente */
-  
-  /* animação suave do gradiente */
-  animation: gradientShift 3s ease infinite;
-  color: #fff; /* opcional: muda a cor do texto */
-}
+    .field-label {
+      display: block;
+      font-size: 9px;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
 
-/* Efeito de gradiente contínuo */
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg);
+      border: 1px solid var(--border-accent);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      border-radius: 2px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
 
-/* Estado de loading */
-button.loading {
-  background: #555;
-  cursor: not-allowed;
-  transform: none; /* remove scale durante loading */
-  animation: none; /* remove animação */
-}
+    input::placeholder { color: var(--text-muted); }
+    input:focus { border-color: var(--text-secondary); }
+    input.error { border-color: var(--accent); }
+    input.success { border-color: #2dc653; }
 
-  .erro {
-    color: #ff4d4d;
-    font-size: 13px;
-    display: none;
-    margin-top: 10px;
-  }
+    button {
+      width: 100%;
+      padding: 11px;
+      background: var(--accent);
+      border: none;
+      color: white;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 3px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.15s, transform 0.1s;
+      margin-top: 8px;
+      text-transform: uppercase;
+    }
 
-</style>
+    button:hover { background: #c1121f; }
+    button:active { transform: scale(0.98); }
+
+    button.loading {
+      background: var(--border-accent);
+      color: var(--text-secondary);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .erro {
+      display: none;
+      margin-top: 12px;
+      padding: 8px 10px;
+      background: rgba(230, 57, 70, 0.08);
+      border: 1px solid rgba(230, 57, 70, 0.25);
+      border-radius: 2px;
+      color: var(--accent);
+      font-size: 11px;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+
+    /* SHAKE */
+    .shake { animation: shake 0.3s; }
+
+    @keyframes shake {
+      0%   { transform: translateX(0); }
+      25%  { transform: translateX(-6px); }
+      50%  { transform: translateX(6px); }
+      75%  { transform: translateX(-6px); }
+      100% { transform: translateX(0); }
+    }
+
+    /* FOOTER */
+    .login-footer {
+      position: relative;
+      z-index: 1;
+      font-size: 9px;
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 400px) {
+      .box { width: 90vw; padding: 24px 18px; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- LOGO AQUI -->
-<div class="logo">
-  <img src="imgs/aton.png" alt="AT0N Gaming">
-</div>
+  <div class="logo">
+    <img src="imgs/aton.png" alt="AT0N Gaming">
+    <span class="logo-label">CS2 // Táticas</span>
+  </div>
 
-<div class="box" id="box">
-  <h2>Login</h2>
+  <div class="box" id="box">
+    <div class="box-header">
+      <div class="box-title">Login</div>
+      <div class="box-sub">Acesso restrito</div>
+    </div>
 
-  <form id="loginForm">
-    <input type="text" id="user" placeholder="Usuário" required>
-    <input type="password" id="pass" placeholder="Senha" required>
+    <form id="loginForm">
+      <div class="field">
+        <label class="field-label" for="user">Usuário</label>
+        <input type="text" id="user" placeholder="seu usuário" required autocomplete="off">
+      </div>
 
-    <button type="submit" id="btn">Entrar</button>
+      <div class="field">
+        <label class="field-label" for="pass">Senha</label>
+        <input type="password" id="pass" placeholder="••••••••" required>
+      </div>
 
-    <div class="erro" id="erro">Usuário ou senha incorretos</div>
-  </form>
-</div>
+      <button type="submit" id="btn">Entrar</button>
+
+      <div class="erro" id="erro">Usuário ou senha incorretos</div>
+    </form>
+  </div>
+
+  <span class="login-footer">At0n Gaming — 2026</span>
 
 <script>
   const form = document.getElementById("loginForm");
   const user = document.getElementById("user");
   const pass = document.getElementById("pass");
   const erro = document.getElementById("erro");
-  const box = document.getElementById("box");
-  const btn = document.getElementById("btn");
+  const box  = document.getElementById("box");
+  const btn  = document.getElementById("btn");
 
   const users = [
     { username: "atongaming", password: "atongaming2026" },
@@ -181,33 +249,23 @@ button.loading {
     e.preventDefault();
 
     erro.style.display = "none";
-
     user.classList.remove("error", "success");
     pass.classList.remove("error", "success");
 
-    const validUser = users.find(u => 
+    const validUser = users.find(u =>
       u.username === user.value && u.password === pass.value
     );
 
     if (validUser) {
-
       user.classList.add("success");
       pass.classList.add("success");
-
       btn.classList.add("loading");
       btn.innerText = "Entrando...";
-
-      setTimeout(() => {
-        window.location.href = "main.html";
-      }, 1200);
-
+      setTimeout(() => { window.location.href = "inicio.html"; }, 1200);
     } else {
-
       erro.style.display = "block";
-
       user.classList.add("error");
       pass.classList.add("error");
-
       box.classList.add("shake");
       setTimeout(() => box.classList.remove("shake"), 300);
     }

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste de Aptidão — ATON Gaming</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    /* =========================================
+       BASE & ESTRUTURA ATON
+       ========================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #090909; --bg-card: #111111; --border: #1e1e1e; 
+      --text-primary: #f0f0f0; --text-secondary: #666; --accent: #e63946;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-primary); line-height: 1.6; padding-bottom: 50px; }
+    
+    header { padding: 30px; border-bottom: 1px solid var(--border); text-align: center; }
+    header h1 { font-family: 'Rajdhani', sans-serif; letter-spacing: 5px; text-transform: uppercase; margin: 0; }
+    .container { max-width: 800px; margin: auto; padding: 20px; }
+
+    /* Estilos dos Novos Campos (Identidade e Vitalidade) */
+    .status-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+      background: #0d0d0d; border: 1px solid var(--border); padding: 20px;
+      margin-bottom: 30px; border-radius: 4px;
+    }
+    .status-field { display: flex; flex-direction: column; gap: 5px; }
+    .status-field label { font-family: 'Share Tech Mono'; font-size: 11px; color: var(--accent); text-transform: uppercase; }
+    .status-field input, .status-field select {
+      background: #151515; border: 1px solid var(--border); color: #fff;
+      padding: 10px; font-family: 'Inter'; outline: none;
+    }
+    .status-field input:focus { border-color: var(--accent); }
+
+    /* Cards de Questão */
+    .question-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      padding: 25px; margin-bottom: 25px; position: relative; border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .start-overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(17, 17, 17, 0.98); z-index: 10;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: opacity 0.4s;
+    }
+
+    .btn-start-question {
+      background: transparent; border: 1px solid var(--accent); color: var(--accent);
+      padding: 10px 25px; font-family: 'Share Tech Mono'; cursor: pointer;
+      text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
+    }
+    .btn-start-question:hover { background: var(--accent); color: white; }
+
+    .q-content { filter: blur(8px); pointer-events: none; transition: 0.4s; }
+    .question-card.active .q-content { filter: blur(0); pointer-events: auto; }
+    .question-card.active .start-overlay { display: none; }
+
+    .timer-container { width: 100%; height: 3px; background: #000; margin-bottom: 15px; }
+    .timer-bar { height: 100%; width: 100%; background: var(--accent); transition: width 1s linear; }
+    
+    .q-header { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--accent); display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .q-text { font-size: 15px; margin-bottom: 20px; color: #fff; }
+
+    .option-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px;
+      background: #0d0d0d; border: 1px solid var(--border); margin-bottom: 8px; cursor: pointer;
+    }
+    .option-item input { accent-color: var(--accent); }
+    .option-item label { flex: 1; cursor: pointer; font-size: 14px; color: #ccc; }
+
+    .locked { opacity: 0.3; pointer-events: none !important; filter: grayscale(1); }
+    .locked::after { 
+        content: "TEMPO ESGOTADO"; position: absolute; top: 50%; left: 50%; 
+        transform: translate(-50%, -50%); font-family: 'Rajdhani'; font-weight: 700;
+        color: var(--accent); border: 2px solid var(--accent); padding: 5px 15px; z-index: 20;
+    }
+
+    .btn-submit { width: 100%; padding: 20px; background: var(--accent); color: #fff; border: none; font-family: 'Rajdhani'; font-weight: 700; cursor: pointer; letter-spacing: 3px; text-transform: uppercase; margin-top: 40px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>SISTEMA DE AVALIAÇÃO</h1>
+  <p style="font-family: 'Share Tech Mono'; font-size: 10px; color: #444; letter-spacing: 2px;">LOG DE LATÊNCIA E STATUS VITAL ATIVADO</p>
+</header>
+
+<div class="container">
+  <form id="testForm">
+
+    <div class="status-grid">
+      <div class="status-field">
+        <label>Nome Completo</label>
+        <input type="text" name="user_name" placeholder="Ex: João Silva" required>
+      </div>
+      <div class="status-field">
+        <label>Nick / Codinome</label>
+        <input type="text" name="user_nick" placeholder="Ex: Ghost_ATON" required>
+      </div>
+      <div class="status-field">
+        <label>Idade</label>
+        <input type="number" name="user_age" placeholder="00" required>
+      </div>
+      <div class="status-field">
+        <label>Horas Dormidas Hoje</label>
+        <input type="number" name="user_sleep" placeholder="Ex: 8" required>
+      </div>
+      <div class="status-field">
+        <label>Nível de Estresse (1-10)</label>
+        <select name="user_stress">
+          <option value="Baixo">1-3 Baixo</option>
+          <option value="Médio">4-7 Médio</option>
+          <option value="Alto">8-10 Alto</option>
+        </select>
+      </div>
+      <div class="status-field">
+        <label>Nível de Cansaço (1-10)</label>
+        <select name="user_tired">
+          <option value="Baixo">1-3 Baixo</option>
+          <option value="Médio">4-7 Médio</option>
+          <option value="Alto">8-10 Alto</option>
+        </select>
+      </div>
+      <div class="status-field" style="grid-column: span 2;">
+        <label>Nível de Ansiedade (1-10)</label>
+        <select name="user_anxiety">
+          <option value="Mínima">1-3 Mínima</option>
+          <option value="Moderada">4-7 Moderada</option>
+          <option value="Severa">8-10 Severa</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="question-card" data-id="q1" data-time="20">
+      <div class="start-overlay"><button type="button" class="btn-start-question">Iniciar Questão 01</button></div>
+      <div class="q-content">
+        <div class="timer-container"><div class="timer-bar"></div></div>
+        <div class="q-header"><span>> Q_ID: 01</span> <span class="t-text">20s</span></div>
+        <p class="q-text"><strong>O que acender primeiro?</strong> Você tem um fósforo, um fogão a gás e uma vela. O que acende primeiro?</p>
+        <div class="option-item"><input type="radio" name="q1" id="q1a" value="Fogão"><label for="q1a">O fogão a gás</label></div>
+        <div class="option-item"><input type="radio" name="q1" id="q1b" value="Vela"><label for="q1b">A vela</label></div>
+        <div class="option-item"><input type="radio" name="q1" id="q1c" value="Fósforo"><label for="q1c">O fósforo</label></div>
+      </div>
+    </div>
+
+    <div class="question-card" data-id="q2" data-time="15">
+      <div class="start-overlay"><button type="button" class="btn-start-question">Iniciar Questão 02</button></div>
+      <div class="q-content">
+        <div class="timer-container"><div class="timer-bar"></div></div>
+        <div class="q-header"><span>> Q_ID: 02</span> <span class="t-text">15s</span></div>
+        <p class="q-text"><strong>Construtores:</strong> 4 homens constroem 4 barcos em 4 dias. Quanto tempo demoraria 1 homem para construir 1 barco?</p>
+        <div class="option-item"><input type="radio" name="q2" id="q2a" value="1 Dia"><label for="q2a">1 dia</label></div>
+        <div class="option-item"><input type="radio" name="q2" id="q2b" value="4 Dias"><label for="q2b">4 dias</label></div>
+      </div>
+    </div>
+
+    <div class="question-card" data-id="q3" data-time="20">
+      <div class="start-overlay"><button type="button" class="btn-start-question">Iniciar Questão 03</button></div>
+      <div class="q-content">
+        <div class="timer-container"><div class="timer-bar"></div></div>
+        <div class="q-header"><span>> Q_ID: 03</span> <span class="t-text">20s</span></div>
+        <p class="q-text"><strong>Parentesco:</strong> O meu pai é irmão da sua irmã. Que parente sou eu?</p>
+        <div class="option-item"><input type="radio" name="q3" id="q3a" value="Sobrinho"><label for="q3a">Sobrinho</label></div>
+        <div class="option-item"><input type="radio" name="q3" id="q3b" value="Filho"><label for="q3b">Filho</label></div>
+        <div class="option-item"><input type="radio" name="q3" id="q3c" value="Tio"><label for="q3c">Tio</label></div>
+      </div>
+    </div>
+
+    <div class="question-card" data-id="q4" data-time="25">
+      <div class="start-overlay"><button type="button" class="btn-start-question">Iniciar Questão 04</button></div>
+      <div class="q-content">
+        <div class="timer-container"><div class="timer-bar"></div></div>
+        <div class="q-header"><span>> Q_ID: 04</span> <span class="t-text">25s</span></div>
+        <p class="q-text">"A diretora que os relatórios que os funcionários que o consultor que a empresa contratou avaliou entregaram assinou a demissão..."</p>
+        <div class="option-item"><input type="radio" name="q4" id="q4a" value="Consultor"><label for="q4a">O consultor</label></div>
+        <div class="option-item"><input type="radio" name="q4" id="q4b" value="Diretora"><label for="q4b">A diretora</label></div>
+      </div>
+    </div>
+
+    <div class="question-card" data-id="q5" data-time="20">
+      <div class="start-overlay"><button type="button" class="btn-start-question">Iniciar Questão 05</button></div>
+      <div class="q-content">
+        <div class="timer-container"><div class="timer-bar"></div></div>
+        <div class="q-header"><span>> Q_ID: 05</span> <span class="t-text">20s</span></div>
+        <p class="q-text">"Os vinhos que os homens bebem muito suam na garrafa..."</p>
+        <div class="option-item"><input type="radio" name="q5" id="q5a" value="Homens"><label for="q5a">Os homens</label></div>
+        <div class="option-item"><input type="radio" name="q5" id="q5b" value="Vinhos"><label for="q5b">Os vinhos</label></div>
+      </div>
+    </div>
+
+    <div class="question-card" data-id="q6" data-time="15">
+      <div class="start-overlay"><button type="button" class="btn-start-question">Iniciar Questão 06</button></div>
+      <div class="q-content">
+        <div class="timer-container"><div class="timer-bar"></div></div>
+        <div class="q-header"><span>> Q_ID: 06</span> <span class="t-text">15s</span></div>
+        <p class="q-text">Taco + Bola = R$ 1,10. O taco custa R$ 1,00 a mais que a bola. Quanto custa a bola?</p>
+        <div class="option-item"><input type="radio" name="q6" id="q6a" value="R$ 0,05"><label for="q6a">R$ 0,05</label></div>
+        <div class="option-item"><input type="radio" name="q6" id="q6b" value="R$ 0,10"><label for="q6b">R$ 0,10</label></div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit" id="submitBtn">Enviar Protocolo Completo</button>
+  </form>
+</div>
+
+<script>
+  const startTimes = {};
+  const latencies = {};
+
+  function startQuestionTimer(card) {
+    const qId = card.getAttribute('data-id');
+    startTimes[qId] = Date.now();
+    
+    card.classList.add('active');
+    let timeLeft = parseInt(card.getAttribute('data-time'));
+    const totalTime = timeLeft;
+    const bar = card.querySelector('.timer-bar');
+    const text = card.querySelector('.t-text');
+
+    const countdown = setInterval(() => {
+      timeLeft--;
+      if (text) text.innerText = timeLeft + 's';
+      if (bar) bar.style.width = (timeLeft / totalTime * 100) + '%';
+
+      if (timeLeft <= 0) {
+        clearInterval(countdown);
+        if (!latencies[qId]) latencies[qId] = totalTime;
+        card.classList.add('locked');
+        card.querySelectorAll('input').forEach(i => i.disabled = true);
+      }
+    }, 1000);
+
+    card.querySelectorAll('input').forEach(input => {
+      input.addEventListener('change', () => {
+        const timeSpent = Math.floor((Date.now() - startTimes[qId]) / 1000);
+        latencies[qId] = timeSpent;
+      });
+    });
+  }
+
+  document.querySelectorAll('.btn-start-question').forEach(btn => {
+    btn.addEventListener('click', function() {
+      startQuestionTimer(this.closest('.question-card'));
+    });
+  });
+
+  document.getElementById('testForm').onsubmit = async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.innerText = "TRANSMITINDO...";
+    btn.disabled = true;
+
+    const webhookURL = "https://discord.com/api/webhooks/1491130008129765526/MYxRM7u4hqROTCh0ewo9XOmMC9Io79kH_41jg0x1TKQAgZIryXtdaaEo-44g4ron2QHb"; 
+    const formData = new FormData(this);
+    
+    const questions = [
+      { id: 'q1', label: 'Q1: Fósforo' },
+      { id: 'q2', label: 'Q2: Barcos' },
+      { id: 'q3', label: 'Q3: Parentesco' },
+      { id: 'q4', label: 'Q4: Demissão' },
+      { id: 'q5', label: 'Q5: Vinhos' },
+      { id: 'q6', label: 'Q6: Bola' }
+    ];
+
+    let qFields = [];
+    questions.forEach(q => {
+      const resp = formData.get(q.id);
+      const timeUsed = latencies[q.id] ? `${latencies[q.id]}s` : "---";
+      const card = document.querySelector(`[data-id="${q.id}"]`);
+      const isLocked = card?.classList.contains('locked');
+      let val = resp ? `✅ **${resp}**\n⏱️ ${timeUsed}` : (isLocked ? `❌ **BLOQUEADA**\n⏱️ ${timeUsed}` : "⚪ Não iniciada");
+      qFields.push({ name: q.label, value: val, inline: true });
+    });
+
+    const payload = {
+      username: "ATON System Monitor",
+      embeds: [
+        {
+          title: "👤 IDENTIFICAÇÃO DO SUJEITO",
+          color: 3447003, // Azul
+          fields: [
+            { name: "Nome", value: formData.get('user_name'), inline: true },
+            { name: "Nick", value: formData.get('user_nick'), inline: true },
+            { name: "Idade", value: formData.get('user_age'), inline: true },
+            { name: "Sono", value: formData.get('user_sleep') + "h", inline: true }
+          ]
+        },
+        {
+          title: "🧠 ESTADO PSICOMÉTRICO",
+          color: 15844367, // Amarelo
+          fields: [
+            { name: "Estresse", value: formData.get('user_stress'), inline: true },
+            { name: "Cansaço", value: formData.get('user_tired'), inline: true },
+            { name: "Ansiedade", value: formData.get('user_anxiety'), inline: true }
+          ]
+        },
+        {
+          title: "📑 DESEMPENHO NAS QUESTÕES",
+          color: 15105570, // Vermelho ATON
+          fields: qFields,
+          footer: { text: "Protocolo ATON Gaming | " + new Date().toLocaleString('pt-BR') }
+        }
+      ]
+    };
+
+    try {
+      const response = await fetch(webhookURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        alert('PROTOCOLO TRANSMITIDO COM SUCESSO.');
+        btn.innerText = "TRANSMISSÃO CONCLUÍDA";
+      } else {
+        alert('FALHA NA TRANSMISSÃO.');
+        btn.disabled = false;
+        btn.innerText = "Tentar Novamente";
+      }
+    } catch (err) {
+      alert('ERRO DE REDE.');
+      btn.disabled = false;
+    }
+  };
+</script>
+</body>
+</html>
